@@ -11,6 +11,7 @@ This project is a simple Signature Generator API built with FastAPI. It creates 
 - [Usage](#usage)
   - [Running the API](#running-the-api)
   - [API Endpoints](#api-endpoints)
+- [Test Page](#test-page)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Font Licenses](#font-licenses)
@@ -100,6 +101,12 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d '{"name": "John Doe", "font_style": "GreatVibes"}' --output john_doe_signature.png
 ```
+
+## Test Page
+
+A simple test page is provided to interact with the Signature Generator API. Open the `index.html` file in your browser to use the web interface for generating signature previews.
+
+![Signature Generator](docs/signature_generator_example.png)
 
 ## Testing
 
