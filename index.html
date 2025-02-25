@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .font-selection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .font-option {
+            display: flex;
+            align-items: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .previews {
+            margin-top: 20px;
+        }
+        .preview-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview-card img {
+            max-width: 200px;
+            height: auto;
+        }
+        .download-btn {
+            background-color: #28a745;
+            padding: 5px 10px;
+            font-size: 14px;
+            width: auto;
+        }
+        .download-btn:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Signature Generator</h1>
+        <div class="form-group">
+            <label for="name">Enter Your Name:</label>
+            <input type="text" id="name" placeholder="e.g., Louis-Guillaume Carrier-Bedard">
+        </div>
+        <div class="form-group">
+            <label>Select Fonts:</label>
+            <div class="font-selection">
+                <div class="font-option"><input type="checkbox" value="Sacramento" checked> Sacramento</div>
+                <div class="font-option"><input type="checkbox" value="GreatVibes"> Great Vibes</div>
+                <div class="font-option"><input type="checkbox" value="DancingScript-Regular"> Dancing Script Regular</div>
+                <div class="font-option"><input type="checkbox" value="DancingScript-Medium"> Dancing Script Medium</div>
+                <div class="font-option"><input type="checkbox" value="DancingScript-SemiBold"> Dancing Script SemiBold</div>
+                <div class="font-option"><input type="checkbox" value="DancingScript-Bold"> Dancing Script Bold</div>
+                <div class="font-option"><input type="checkbox" value="Parisienne"> Parisienne</div>
+                <div class="font-option"><input type="checkbox" value="Allura"> Allura</div>
+            </div>
+        </div>
+        <button onclick="generateSignatures()">Generate Previews</button>
+        <div class="previews" id="previewContainer"></div>
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/generate-signature/';
+
+        async function generateSignatures() {
+            const name = document.getElementById('name').value.trim();
+            const checkboxes = document.querySelectorAll('.font-selection input[type="checkbox"]:checked');
+            const previewContainer = document.getElementById('previewContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Clear previous results
+            previewContainer.innerHTML = '';
+            errorMessage.textContent = '';
+
+            if (!name) {
+                errorMessage.textContent = 'Please enter a name.';
+                return;
+            }
+
+            if (checkboxes.length === 0) {
+                errorMessage.textContent = 'Please select at least one font.';
+                return;
+            }
+
+            // Generate previews for each selected font
+            for (const checkbox of checkboxes) {
+                const fontStyle = checkbox.value;
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, font_style: fontStyle })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to generate signature for ${fontStyle}`);
+                    }
+
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+
+                    // Create preview card
+                    const card = document.createElement('div');
+                    card.className = 'preview-card';
+                    card.innerHTML = `
+                        <div>
+                            <strong>${fontStyle}</strong><br>
+                            <img src="${url}" alt="${fontStyle} signature">
+                        </div>
+                        <button class="download-btn" onclick="downloadImage('${url}', '${name}_${fontStyle}.png')">Download</button>
+                    `;
+                    previewContainer.appendChild(card);
+                } catch (error) {
+                    errorMessage.textContent += `Error with ${fontStyle}: ${error.message}\n`;
+                }
+            }
+        }
+
+        function downloadImage(url, filename) {
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
