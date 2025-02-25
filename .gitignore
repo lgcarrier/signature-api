@@ -28,11 +28,11 @@ build/
 
 # Generated output files
 /outputs/*
-signature.png  # Temporary file from the API
+signature.png
 
 # System files
-.DS_Store  # macOS
-Thumbs.db  # Windows
+.DS_Store
+Thumbs.db
 
 # IDE/Editor files
 .vscode/
@@ -44,4 +44,3 @@ Thumbs.db  # Windows
 *.bak
 *.swp
 *~
-.DS_Store
