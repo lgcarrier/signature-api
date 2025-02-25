@@ -11,7 +11,7 @@ app = FastAPI(title="Signature Generator API")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://luxury-sunflower-6bd87f.netlify.app/"],  # Allows all origins (adjust for production)
+    allow_origins=["https://luxury-sunflower-6bd87f.netlify.app"],  # Allows all origins (adjust for production)
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods (GET, POST, OPTIONS, etc.)
     allow_headers=["*"],  # Allows all headers
