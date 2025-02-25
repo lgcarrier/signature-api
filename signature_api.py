@@ -1,11 +1,21 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware  # Add CORS middleware
 from PIL import Image, ImageDraw, ImageFont
 import os
 from pydantic import BaseModel
 
 # Initialize FastAPI app
 app = FastAPI(title="Signature Generator API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (adjust for production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, OPTIONS, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
 
 # Pydantic model for request validation
 class SignatureRequest(BaseModel):
