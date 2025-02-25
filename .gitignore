@@ -1,0 +1,47 @@
+# Python-specific ignores
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+/bin/
+/include/
+/lib/
+/lib64/
+/pyvenv.cfg
+
+# FastAPI/Development
+*.log
+*.pid
+*.sock
+
+# Generated output files
+/outputs/*
+signature.png  # Temporary file from the API
+
+# System files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Miscellaneous
+*.bak
+*.swp
+*~
+.DS_Store
